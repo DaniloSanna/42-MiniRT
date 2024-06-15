@@ -6,7 +6,7 @@
 /*   By: djustino <djustino@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:45:46 by jaqribei          #+#    #+#             */
-/*   Updated: 2024/06/10 22:29:23 by djustino         ###   ########.fr       */
+/*   Updated: 2024/06/14 23:37:02 by djustino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ printf("\n----------------------------------------------------------------------
 
 printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-\n");
 
-	t_ray		ray_GENERAL = create_ray(create_point(0, 0, -10), create_vector(0, 0, 1));
+	t_ray		ray_GENERAL = create_ray(create_point(0, 0, -3), create_vector(0, 0, 1));
  	t_intersections *intersections;
  	intersections = get_list_intersections(0);
 
@@ -77,48 +77,49 @@ printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  		exit(-2);
 	}
 
-	if(add_last_intersections(intersections, SPHERE) == FALSE)
+	if(add_last_intersections(intersections, SPHERE, 1) == FALSE)
  		exit(-2);
 
  	t_intersection	*iter_one = get_last_intersec();
  	t_sphere		*sphere_one = get_last_intersected_obj();
 
-	if(!add_last_intersections(intersections, SPHERE))
+	if(!add_last_intersections(intersections, SPHERE, 2))
 		exit(-2);
 
  	t_intersection	*iter_two = get_last_intersec();
  	t_sphere		*sphere_two = get_last_intersected_obj();
 
-	if(!add_last_intersections(intersections, SPHERE))
+	if(!add_last_intersections(intersections, SPHERE, 3))
 		exit(-2);
 
  	t_intersection	*iter_tree = get_last_intersec();
  	t_sphere		*sphere_tree = get_last_intersected_obj();
-	if(!add_last_intersections(intersections, SPHERE))
+	if(!add_last_intersections(intersections, SPHERE, 4))
 		exit(-2);
 
  	t_intersection	*iter_four = get_last_intersec();
  	t_sphere		*sphere_four = get_last_intersected_obj();
 
-	if(!add_last_intersections(intersections, SPHERE))
-		exit(-2);
+	// if(!add_last_intersections(intersections, SPHERE, 5))
+	// 	exit(-2);
 
- 	t_intersection	*iter_five = get_last_intersec();
- 	t_sphere		*sphere_five = get_last_intersected_obj();
+ 	// t_intersection	*iter_five = get_last_intersec();
+ 	// t_sphere		*sphere_five = get_last_intersected_obj();
 
-	calc_intersection(ray_GENERAL, iter_one, 0.0);
-	calc_intersection(ray_GENERAL, iter_two, 1.0);
-	calc_intersection(ray_GENERAL, iter_tree, 2.0);
-	calc_intersection(ray_GENERAL, iter_four, 3.0);
-	calc_intersection(ray_GENERAL, iter_five, 4.0);
+	calc_intersection(ray_GENERAL, iter_one, 5.0);
+	calc_intersection(ray_GENERAL, iter_two, 7.0);
+	calc_intersection(ray_GENERAL, iter_tree, -3.0);
+	calc_intersection(ray_GENERAL, iter_four, 2.0);
+	// calc_intersection(ray_GENERAL, iter_five, 4.0);
 
 	printf("\nLOOP");
 
 	t_intersection	*loop = intersections->start;
-	int numero = 0;
+	int numero = 1;
 	while(loop)
 	{
 		printf("\nInterseção %d", numero++);
+		printf("\n	LOOP->TIME -> %0.2f", loop->time);
 		printf("\n	LOOP->intersect.t[0] -> %f", loop->intersect.t[0]);
 		printf("\n	LOOP->intersect.t[1] -> %f", loop->intersect.t[1]);
 		loop = loop->next;
@@ -126,10 +127,18 @@ printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	printf("\n");
 
 	t_intersection	*who_hit = did_hit(intersections);
-	printf("\nBateu/Baterá em");
-	printf("\n	LOOP->intersect.t[0] -> %f", who_hit->intersect.t[0]);
-	printf("\n	LOOP->intersect.t[1] -> %f", who_hit->intersect.t[1]);
-	printf("\n");
+	if(who_hit)
+	{
+		printf("\nBateu/Baterá em");
+		printf("\n	LOOP->ID -> %d", who_hit->id);
+		printf("\n	LOOP->TIME -> %0.2f", who_hit->time);
+		printf("\n	LOOP->intersect.t[0] -> %f", who_hit->intersect.t[0]);
+		printf("\n	LOOP->intersect.t[1] -> %f", who_hit->intersect.t[1]);
+		printf("\n");
+	}else{
+		printf("\n NÂO Bateu!!!!!!!!!!!!!!!!!");
+	}
+
 
 
 	t_ray	ray_transform = create_ray(create_point(1, 2, 3), create_vector(0, 1, 0));
@@ -138,16 +147,16 @@ printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	t_ray *ray_result = transform(ray_transform, matrix, "translate");
 
-	printf("\nTransição");
-	printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
-	printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
-	printf("\n");
+	// printf("\nTransição");
+	// printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
+	// printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
+	// printf("\n");
 
 
-	printf("\nMatrix");
-	printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
-	printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
-	printf("\n");
+	// printf("\nMatrix");
+	// printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
+	// printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
+	// printf("\n");
 }
 	
 // int	main(void)

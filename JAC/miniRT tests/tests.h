@@ -6,7 +6,7 @@
 /*   By: djustino <djustino@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/31 18:48:14 by jaqribei          #+#    #+#             */
-/*   Updated: 2024/06/10 22:26:39 by djustino         ###   ########.fr       */
+/*   Updated: 2024/06/15 00:51:29 by djustino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ typedef enum {
 
 typedef struct s_intersection
 {
+	int						id;
 	// DADOS DO OBJETO
 	t_obj_type 				objtype;
 	void					*obj;
@@ -183,10 +184,10 @@ void *create_t_cube();
 void *create_t_pyramid();
 void *create_t_sphere();
 
-t_intersection* create_intersection(t_obj_type type);
+t_intersection* create_intersection(t_obj_type type, int id);
 t_intersections* create_intersections();
 t_intersections* get_list_intersections(int action);
-int add_last_intersections(t_intersections *intersections, t_obj_type type);
+int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
 t_intersection *get_last_intersec();
 void *get_last_intersected_obj();
 
@@ -200,6 +201,6 @@ t_ray *transform(t_ray ray, t_matrix matrix, char *action);
 
 
 // DELETAR
-#include <string.h>
-
+	#include <string.h>
+	#include <float.h>
 # endif
