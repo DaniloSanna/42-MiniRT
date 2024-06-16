@@ -265,22 +265,86 @@ t_intersection *did_hit(t_intersections *intersections){
 
 
 // Função que recebe dois arrays e uma função como argumentos
-t_ray *transform(t_ray *ray, t_matrix matrix, char *action) {
+// t_ray *transform(t_ray *ray, t_matrix matrix, char *action) {
+
+// 	t_ray *transformation;
+
+// 	transformation = (t_ray*)malloc(sizeof(t_ray));
+// 	if(!transformation)
+// 		return(NULL);
+	
+// 	// Translação
+// 	if(ft_strcmp(action, "translate")){
+// 		transformation->origin = multiply_matrix_by_tuple(matrix, transformation->origin);
+// 		transformation->direction = multiply_matrix_by_tuple(matrix, transformation->direction);
+// 	}
+
+// 	return(transformation);
+// }
+
+
+// Função que recebe dois arrays e uma função como argumentos
+t_ray *transform_danilo(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
 
 	t_ray *transformation;
+	t_matrix matrix;
 
-	transformation = (t_ray*)malloc(sizeof(t_ray));
+	matrix = create_matrix_identity(4);
+	transformation = create_ray_pointer(create_blanktuple(), create_blanktuple());
 	if(!transformation)
 		return(NULL);
-	
-	// Translação
-	if(ft_strcmp(action, "translate")){
-		transformation->origin = multiply_matrix_by_tuple(matrix, transformation->origin);
-		transformation->direction = multiply_matrix_by_tuple(matrix, transformation->direction);
+
+	if(action == TRANSLATION){
+		matrix = create_translation_matrix(matrizdata.x, matrizdata.y, matrizdata.z);
+	}else if(action == SCALING){
+		matrix = create_scaling_matrix(matrizdata.x, matrizdata.y, matrizdata.z);
+		transformation->direction = transform_formula_danilo(ray->direction, matrix);
+	}else if(action == ROTATATE_X){
+		matrix = create_rotation_matrix_x(extravalues[0]);
+	}else if(action == ROTATATE_Y){
+		matrix = create_rotation_matrix_y(extravalues[0]);
+	}else if(action == ROTATATE_Z){
+		matrix = create_rotation_matrix_z(extravalues[0]);
+	}else if(action == SHEARING){
+		matrix = create_shearing_matrix(extravalues);
+	}else{
+		return(free(transformation), NULL);
 	}
 
-	
-
+	transformation->origin = transform_formula_danilo(ray->origin, matrix);
 	return(transformation);
 }
 
+t_tuple transform_formula_danilo(t_tuple t, t_matrix m) {
+    t_tuple result;
+	result.x = t.x * m.grid[0][0] + t.y * m.grid[0][1] + t.z * m.grid[0][2] + m.grid[0][3];
+    result.y = t.x * m.grid[1][0] + t.y * m.grid[1][1] + t.z * m.grid[1][2] + m.grid[1][3];
+    result.z = t.x * m.grid[2][0] + t.y * m.grid[2][1] + t.z * m.grid[2][2] + m.grid[2][3];
+	result.w = t.w;
+    return result;
+}
+
+
+t_tuple create_blanktuple(){
+	
+	t_tuple retur;
+
+	retur.x = 0;
+	retur.y = 0;
+	retur.z = 0;
+	retur.w = 0;
+
+	return(retur);
+}
+
+t_ray *create_ray_pointer(t_tuple origin, t_tuple direction) // create a ray
+{
+	t_ray	*ray;
+
+	ray = (t_ray*)malloc(sizeof(t_ray));
+    if (!ray)
+		return(NULL);
+	ray->origin = create_point(origin.x, origin.y, origin.z);
+	ray->direction = create_vector(direction.x, direction.y, direction.z);
+	return(ray);
+}

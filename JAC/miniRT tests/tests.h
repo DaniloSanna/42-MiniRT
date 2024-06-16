@@ -143,6 +143,7 @@ typedef enum {
     TWO_HIT
 } t_did_hit;
 
+
 // Define a enumeração para identificar o tipo de objeto
 typedef enum {
     SPHERE,
@@ -195,8 +196,21 @@ void calc_intersection(t_ray ray, t_intersection *intersection_element, double t
 t_intersection *did_hit(t_intersections *intersections);
 
 
-typedef int (*transform_operations)(double, double);
-t_ray *transform(t_ray ray, t_matrix matrix, char *action);
+// Define ação de transformação
+typedef enum {
+	TRANSLATION,
+	SCALING,
+	ROTATATE_X,
+	ROTATATE_Y,
+	ROTATATE_Z,
+	SHEARING,
+	INVERSE
+} e_actiontransform;
+
+t_ray *transform_danilo(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_tuple transform_formula_danilo(t_tuple t, t_matrix m);
+t_tuple create_blanktuple();
+t_ray *create_ray_pointer(t_tuple origin, t_tuple direction);
 
 
 // DELETAR

@@ -36,118 +36,156 @@ void round_matrix(t_matrix *m)
 }
 int	main(void){
 
-printf("\n--------------------------------------------------------------------------\n");
-// printf("\n\033[1;35mA ray intersects a sphere at two points\033[0m\n");
+	t_ray ray_GENERAL = create_ray(create_point(0, 0, 5), create_vector(0, 0, 1));
+    t_tuple matriz_transformacao = create_point(3, 4, 5);
+    double extra_values_rotation[] = {3.14/4}; // Valores para rotação
+    double extra_entortar[] = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5}; // Simples valores para cisalhamento
 
-// t_ray	ray_sphere_one = create_ray(create_point(0, 0, -5), create_vector(0, 0, 1));
-// t_sphere	sphere_one = create_sphere();
-// t_discriminant	discriminant_one = calc_discriminant(ray_sphere_one, sphere_one);
-// t_intersec	intersec_sphere_one = intersect(ray_sphere_one, sphere_one, discriminant_one);
+	t_ray *translated_ray;
+	t_ray *scaled_ray;
+	t_ray *rotated_x_ray;
+	t_ray *rotated_y_ray;
+	t_ray *rotated_z_ray;
+	t_ray *sheared_ray;
 
-// printf("intersections: %d\n", intersec_sphere_one.count);
-// printf("t1: %.2f\n", intersec_sphere_one.t[0]);
-// printf("t2: %.2f\n", intersec_sphere_one.t[1]);
-// if (intersec_sphere_one.count == 2 && intersec_sphere_one.t[0] == 4.0 && intersec_sphere_one.t[1] == 6.0)
-// 	printf("\33[1;32mOK\033[0m\n");
-// else
-// 	printf("\33[1;31mFAIL\033[0m\n");
+	translated_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, TRANSLATION);
+	scaled_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
+	rotated_x_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_X);
+	rotated_y_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Y);
+	rotated_z_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Z);
+	sheared_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_entortar, SHEARING);
 
-// printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-\n");
 
-// t_ray	ray_sphere_two = create_ray(create_point(0, 0, -5), create_vector(0, 0, 1));
-// t_sphere	sphere_two = create_sphere();
-// t_discriminant	discriminant_two = calc_discriminant(ray_sphere_two, sphere_two);
-// t_intersec	intersec_sphere_two = intersect(ray_sphere_two, sphere_two, discriminant_two);
-
-// printf("intersections: %d\n", intersec_sphere_two.count);
-// printf("t1: %.2f\n", intersec_sphere_two.t[0]);
-// printf("t2: %.2f\n", intersec_sphere_two.t[1]);
-// if (intersec_sphere_two.count == 2 && intersec_sphere_two.t[0] == 4.0 && intersec_sphere_two.t[1] == 6.0)
-// 	printf("\33[1;32mOK\033[0m\n");
-// else
-// 	printf("\33[1;31mFAIL\033[0m\n");
-
-printf("\n-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-\n");
-
-	t_ray		ray_GENERAL = create_ray(create_point(0, 0, -10), create_vector(0, 0, 1));
- 	t_intersections *intersections;
- 	intersections = get_list_intersections(0);
-
- 	if(!intersections){
- 		exit(-2);
+	printf("\n\n_________________________TRANSFORMAÇÕES_________________________\n\n");
+    // Testando translação
+    if (translated_ray) {
+        printf("Translated Ray Origin: (%.2f, %.2f, %.2f)\n", translated_ray->origin.x, translated_ray->origin.y, translated_ray->origin.z);
+        free(translated_ray);
+    }else{
+        printf("Translated Ray Origin: NULL\n");
 	}
 
-	if(add_last_intersections(intersections, SPHERE) == FALSE)
- 		exit(-2);
-
- 	t_intersection	*iter_one = get_last_intersec();
- 	t_sphere		*sphere_one = get_last_intersected_obj();
-
-	if(!add_last_intersections(intersections, SPHERE))
-		exit(-2);
-
- 	t_intersection	*iter_two = get_last_intersec();
- 	t_sphere		*sphere_two = get_last_intersected_obj();
-
-	if(!add_last_intersections(intersections, SPHERE))
-		exit(-2);
-
- 	t_intersection	*iter_tree = get_last_intersec();
- 	t_sphere		*sphere_tree = get_last_intersected_obj();
-	if(!add_last_intersections(intersections, SPHERE))
-		exit(-2);
-
- 	t_intersection	*iter_four = get_last_intersec();
- 	t_sphere		*sphere_four = get_last_intersected_obj();
-
-	if(!add_last_intersections(intersections, SPHERE))
-		exit(-2);
-
- 	t_intersection	*iter_five = get_last_intersec();
- 	t_sphere		*sphere_five = get_last_intersected_obj();
-
-	calc_intersection(ray_GENERAL, iter_one, 0.0);
-	calc_intersection(ray_GENERAL, iter_two, 1.0);
-	calc_intersection(ray_GENERAL, iter_tree, 2.0);
-	calc_intersection(ray_GENERAL, iter_four, 3.0);
-	calc_intersection(ray_GENERAL, iter_five, 4.0);
-
-	printf("\nLOOP");
-
-	t_intersection	*loop = intersections->start;
-	int numero = 0;
-	while(loop)
-	{
-		printf("\nInterseção %d", numero++);
-		printf("\n	LOOP->intersect.t[0] -> %f", loop->intersect.t[0]);
-		printf("\n	LOOP->intersect.t[1] -> %f", loop->intersect.t[1]);
-		loop = loop->next;
+    // Testando escala
+    if (scaled_ray) {
+        printf("Scaled Ray Origin: (%.2f, %.2f, %.2f)\n", scaled_ray->origin.x, scaled_ray->origin.y, scaled_ray->origin.z);
+        printf("Scaled Ray Direction: (%.2f, %.2f, %.2f)\n", scaled_ray->direction.x, scaled_ray->direction.y, scaled_ray->direction.z);
+        free(scaled_ray);
+    }else{
+        printf("Scaled Ray Origin: NULL\n");
+        printf("Scaled Ray Direction: NULL\n");
 	}
-	printf("\n");
 
-	t_intersection	*who_hit = did_hit(intersections);
-	printf("\nBateu/Baterá em");
-	printf("\n	LOOP->intersect.t[0] -> %f", who_hit->intersect.t[0]);
-	printf("\n	LOOP->intersect.t[1] -> %f", who_hit->intersect.t[1]);
-	printf("\n");
+    // Testando rotações
+    if (rotated_x_ray) {
+        printf("Rotated X Ray Origin: (%.2f, %.2f, %.2f)\n", rotated_x_ray->origin.x, rotated_x_ray->origin.y, rotated_x_ray->origin.z);
+        free(rotated_x_ray);
+    }else{
+        printf("Rotated X Ray Origin: NULL");
+	}
+
+    if (rotated_y_ray) {
+        printf("Rotated Y Ray Origin: (%.2f, %.2f, %.2f)\n", rotated_y_ray->origin.x, rotated_y_ray->origin.y, rotated_y_ray->origin.z);
+        free(rotated_y_ray);
+    }else{
+        printf("Rotated Y Ray Origin: NULL");
+	}
+
+    if (rotated_z_ray) {
+        printf("Rotated Z Ray Origin: (%.2f, %.2f, %.2f)\n", rotated_z_ray->origin.x, rotated_z_ray->origin.y, rotated_z_ray->origin.z);
+        free(rotated_z_ray);
+    }else{
+ 		printf("Rotated Z Ray Direction: NULL");
+	}
+
+    // Testando cisalhamento
+    if (sheared_ray) {
+        printf("Sheared Ray Origin: (%.2f, %.2f, %.2f)\n", sheared_ray->origin.x, sheared_ray->origin.y, sheared_ray->origin.z);
+        free(sheared_ray);
+    }else{
+			printf("Sheared Ray Origin: NULL");
+	}
+	printf("\n________________________________________________________________\n\n");
+    return 0;
+
+	// t_ray		ray_GENERAL = create_ray(create_point(0, 0, -10), create_vector(0, 0, 1));
+ 	// t_intersections *intersections;
+ 	// intersections = get_list_intersections(0);
+
+ 	// if(!intersections){
+ 	// 	exit(-2);
+	// }
+
+	// if(add_last_intersections(intersections, SPHERE) == FALSE)
+ 	// 	exit(-2);
+
+ 	// t_intersection	*iter_one = get_last_intersec();
+ 	// t_sphere		*sphere_one = get_last_intersected_obj();
+
+	// if(!add_last_intersections(intersections, SPHERE))
+	// 	exit(-2);
+
+ 	// t_intersection	*iter_two = get_last_intersec();
+ 	// t_sphere		*sphere_two = get_last_intersected_obj();
+
+	// if(!add_last_intersections(intersections, SPHERE))
+	// 	exit(-2);
+
+ 	// t_intersection	*iter_tree = get_last_intersec();
+ 	// t_sphere		*sphere_tree = get_last_intersected_obj();
+	// if(!add_last_intersections(intersections, SPHERE))
+	// 	exit(-2);
+
+ 	// t_intersection	*iter_four = get_last_intersec();
+ 	// t_sphere		*sphere_four = get_last_intersected_obj();
+
+	// if(!add_last_intersections(intersections, SPHERE))
+	// 	exit(-2);
+
+ 	// t_intersection	*iter_five = get_last_intersec();
+ 	// t_sphere		*sphere_five = get_last_intersected_obj();
+
+	// calc_intersection(ray_GENERAL, iter_one, 0.0);
+	// calc_intersection(ray_GENERAL, iter_two, 1.0);
+	// calc_intersection(ray_GENERAL, iter_tree, 2.0);
+	// calc_intersection(ray_GENERAL, iter_four, 3.0);
+	// calc_intersection(ray_GENERAL, iter_five, 4.0);
+
+	// printf("\nLOOP");
+
+	// t_intersection	*loop = intersections->start;
+	// int numero = 0;
+	// while(loop)
+	// {
+	// 	printf("\nInterseção %d", numero++);
+	// 	printf("\n	LOOP->intersect.t[0] -> %f", loop->intersect.t[0]);
+	// 	printf("\n	LOOP->intersect.t[1] -> %f", loop->intersect.t[1]);
+	// 	loop = loop->next;
+	// }
+	// printf("\n");
+
+	// t_intersection	*who_hit = did_hit(intersections);
+	// printf("\nBateu/Baterá em");
+	// printf("\n	LOOP->intersect.t[0] -> %f", who_hit->intersect.t[0]);
+	// printf("\n	LOOP->intersect.t[1] -> %f", who_hit->intersect.t[1]);
+	// printf("\n");
 
 
-	t_ray	ray_transform = create_ray(create_point(1, 2, 3), create_vector(0, 1, 0));
-	t_matrix matrix = create_translation_matrix(3.0, 4.0, 5.0);
-	char *cu = "translate";
+	// t_ray	ray_transform = create_ray(create_point(1, 2, 3), create_vector(0, 1, 0));
+	// t_matrix matrix = create_translation_matrix(3.0, 4.0, 5.0);
+	// char *cu = "translate";
 
-	t_ray *ray_result = transform(ray_transform, matrix, "translate");
+	// t_ray *ray_result = transform(ray_transform, matrix, "translate");
 
-	printf("\nTransição");
-	printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
-	printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
-	printf("\n");
+	// printf("\nTransição");
+	// printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
+	// printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
+	// printf("\n");
 
 
-	printf("\nMatrix");
-	printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
-	printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
-	printf("\n");
+	// printf("\nMatrix");
+	// printf("\n	Origin (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->origin.x, ray_result->origin.y, ray_result->origin.z);
+	// printf("\n	Direction (x, y, z) -> %0.2f, %0.2f, %0.2f", ray_result->direction.x, ray_result->direction.y, ray_result->direction.z);
+	// printf("\n");
 }
 	
 // int	main(void)
