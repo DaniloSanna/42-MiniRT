@@ -6,7 +6,7 @@
 /*   By: djustino <djustino@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 01:12:23 by jaqribei          #+#    #+#             */
-/*   Updated: 2024/06/10 23:00:52 by djustino         ###   ########.fr       */
+/*   Updated: 2024/06/15 00:51:09 by djustino         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,14 @@ void* create_t_sphere() {
     return(void*)sphere; // Converte o ponteiro de t_sphere para void*
 }
 
-t_intersection* create_intersection(t_obj_type type) {
+t_intersection* create_intersection(t_obj_type type, int idx) {
     t_intersection* intersection = (t_intersection*)malloc(sizeof(t_intersection));
     if (intersection == NULL) {
         printf("\nErro ao alocar memória para t_intersection\n");
         return NULL;
     }
 
+	intersection->id = idx;
     // Define o tipo de objeto
     intersection->objtype = type;
 
@@ -171,10 +172,10 @@ t_intersections* get_list_intersections(int action) {
     return(NULL);
 }
 
-int add_last_intersections(t_intersections *intersections, t_obj_type type){
+int add_last_intersections(t_intersections *intersections, t_obj_type type, int id){
 	t_intersection *node;
 
-	node = create_intersection(type);
+	node = create_intersection(type, id);
 
 
 	if(!node){
@@ -195,11 +196,11 @@ int add_last_intersections(t_intersections *intersections, t_obj_type type){
 
 t_discriminant calc_discriminant_danilo(t_tuple position, t_ray ray, t_sphere sphere) {
     t_discriminant discriminant;
-    t_tuple sphere_to_position = subtract_tuples(position, sphere.center);
+    t_tuple sphere_to_position = subtract_tuples(ray.origin, sphere.center);
 
     discriminant.a = dot_product(ray.direction, ray.direction);
     discriminant.b = 2 * dot_product(ray.direction, sphere_to_position);
-    discriminant.c = dot_product(sphere_to_position, sphere_to_position) - 1;
+    discriminant.c = dot_product(sphere_to_position, sphere_to_position) - (sphere.radius * sphere.radius);
     discriminant.discriminant = pow(discriminant.b, 2) - (4 * discriminant.a * discriminant.c);
     return discriminant;
 }
@@ -224,7 +225,7 @@ t_intersec	intersect_danilo(double time, t_ray ray, t_intersection *intersection
 	}
 	if(discriminant.discriminant == 0)
 		intersection_element->hitcontact = ONE_HIT;
-	if(discriminant.discriminant> 0)
+	if(discriminant.discriminant > 0)
 		intersection_element->hitcontact = TWO_HIT;
 
 	intersec.t[0] = (-1.0 * discriminant.b - sqrt(discriminant.discriminant)) / (2.0 * discriminant.a);
@@ -238,29 +239,29 @@ void calc_intersection(t_ray ray, t_intersection *intersection_element, double t
 	intersection_element->intersect = intersect_danilo(time, ray, intersection_element);
 }
 
+
 t_intersection *did_hit(t_intersections *intersections){
+    t_intersection *loop = intersections->start;
+    t_intersection *hitted_obj = NULL;
+    double hitted_t = DBL_MAX;  // Inicializado para o máximo valor de double
 
-	t_intersection	*loop = intersections->start;
-	t_intersection	*hitted_obj;
-	double	hitted_t;
+    while(loop) {
+        if(loop->hitcontact != NO_HIT) {
+            double min_t = DBL_MAX;
+            if (loop->hitcontact == ONE_HIT) {
+                min_t = loop->intersect.t[0];  // Apenas um hit válido
+            } else if (loop->hitcontact == TWO_HIT) {
+                min_t = fmin(loop->intersect.t[0], loop->intersect.t[1]);  // Dois hits válidos
+            }
+            if(min_t >= 0 && min_t < hitted_t) {
+                hitted_obj = loop;
+                hitted_t = min_t;
+            }
+        }
+        loop = loop->next;
+    }
 
-	hitted_obj = loop;
-	hitted_t = hitted_obj->intersect.t[0];
-	while(loop)
-	{
-		if(loop->hitcontact == ONE_HIT || loop->hitcontact == TWO_HIT)
-		{
-			if(hitted_t > loop->intersect.t[0] && loop->intersect.t[0] >= 0){
-				hitted_obj = loop;
-				hitted_t = hitted_obj->intersect.t[0];
-			}else if(hitted_t > loop->intersect.t[1] && loop->intersect.t[1] >= 0){
-				hitted_obj = loop;
-				hitted_t = hitted_obj->intersect.t[1];
-			}
-		}
-		loop = loop->next;
-	}
-	return (hitted_obj);
+    return hitted_obj;  // Retorna NULL se nenhum objeto foi atualizado
 }
 
 
