@@ -154,6 +154,8 @@ typedef enum {
 
 typedef struct s_intersection
 {
+	int						id;
+
 	// DADOS DO OBJETO
 	t_obj_type 				objtype;
 	void					*obj;
@@ -184,10 +186,10 @@ void *create_t_cube();
 void *create_t_pyramid();
 void *create_t_sphere();
 
-t_intersection* create_intersection(t_obj_type type);
+t_intersection* create_intersection(t_obj_type type, int idx);
 t_intersections* create_intersections();
 t_intersections* get_list_intersections(int action);
-int add_last_intersections(t_intersections *intersections, t_obj_type type);
+int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
 t_intersection *get_last_intersec();
 void *get_last_intersected_obj();
 
