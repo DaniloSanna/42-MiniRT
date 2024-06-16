@@ -243,11 +243,11 @@ void calc_intersection(t_ray ray, t_intersection *intersection_element, double t
 t_intersection *did_hit(t_intersections *intersections){
     t_intersection *loop = intersections->start;
     t_intersection *hitted_obj = NULL;
-    double hitted_t = DBL_MAX;  // Inicializado para o máximo valor de double
+    double hitted_t = 50000000000000000000000000000000000000000.00;  // Inicializado para o máximo valor de double
 
     while(loop) {
         if(loop->hitcontact != NO_HIT) {
-            double min_t = DBL_MAX;
+            double min_t = 50000000000000000000000000000000000000000.00;
             if (loop->hitcontact == ONE_HIT) {
                 min_t = loop->intersect.t[0];  // Apenas um hit válido
             } else if (loop->hitcontact == TWO_HIT) {
