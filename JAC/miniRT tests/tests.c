@@ -48,12 +48,12 @@ int	main(void){
 	t_ray *rotated_z_ray;
 	t_ray *sheared_ray;
 
-	translated_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, TRANSLATION);
-	scaled_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
-	rotated_x_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_X);
-	rotated_y_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Y);
-	rotated_z_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Z);
-	sheared_ray = transform_danilo(&ray_GENERAL, matriz_transformacao, extra_entortar, SHEARING);
+	translated_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, TRANSLATION);
+	scaled_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
+	rotated_x_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_X);
+	rotated_y_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Y);
+	rotated_z_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Z);
+	sheared_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_entortar, SHEARING);
 
 
 	printf("\n\n_________________________TRANSFORMAÇÕES_________________________\n\n");

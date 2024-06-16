@@ -209,7 +209,8 @@ typedef enum {
 	INVERSE
 } e_actiontransform;
 
-t_ray *transform_danilo(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action);
 t_tuple transform_formula_danilo(t_tuple t, t_matrix m);
 t_tuple create_blanktuple();
 t_ray *create_ray_pointer(t_tuple origin, t_tuple direction);

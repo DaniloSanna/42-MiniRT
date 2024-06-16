@@ -285,7 +285,7 @@ t_intersection *did_hit(t_intersections *intersections){
 
 
 // Função que recebe dois arrays e uma função como argumentos
-t_ray *transform_danilo(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
+t_ray *transform_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
 
 	t_ray *transformation;
 	t_matrix matrix;
@@ -312,6 +312,19 @@ t_ray *transform_danilo(t_ray *ray, t_tuple matrizdata, double *extravalues, e_a
 		return(free(transformation), NULL);
 	}
 
+	transformation->origin = transform_formula_danilo(ray->origin, matrix);
+	return(transformation);
+}
+
+t_ray *transform_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action) {
+
+	t_ray *transformation;
+	transformation = create_ray_pointer(create_blanktuple(), create_blanktuple());
+
+	if(!transformation)
+		return(NULL);
+	if(action == SCALING)
+		transformation->direction = transform_formula_danilo(ray->direction, matrix);
 	transformation->origin = transform_formula_danilo(ray->origin, matrix);
 	return(transformation);
 }
