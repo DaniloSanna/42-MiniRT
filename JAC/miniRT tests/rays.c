@@ -177,7 +177,6 @@ int add_last_intersections(t_intersections *intersections, t_obj_type type, int 
 
 	node = create_intersection(type, id);
 
-
 	if(!node){
 		printf("\n FALSE - add_last_intersections\n");
 		return(FALSE);
@@ -361,4 +360,25 @@ t_ray *create_ray_pointer(t_tuple origin, t_tuple direction) // create a ray
 	ray->origin = create_point(origin.x, origin.y, origin.z);
 	ray->direction = create_vector(direction.x, direction.y, direction.z);
 	return(ray);
+}
+
+
+int add_last_intersection_object(t_intersections *intersections, t_obj_type type, void *obj, int id){
+	t_intersection *node;
+
+	node = create_intersection(type, id);
+
+	if(!node){
+		printf("\n FALSE - add_last_intersections\n");
+		return(FALSE);
+	}
+	if (intersections->start == NULL) {
+        intersections->start = node;
+        intersections->end = node;
+    } else {
+        intersections->end->next = node;
+        node->before = intersections->end;
+        intersections->end = node;
+    }
+	return(TRUE);
 }
