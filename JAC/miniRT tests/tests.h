@@ -53,6 +53,7 @@ typedef struct	s_sphere
 	double		radius;
 	int			id;
 }				t_sphere;
+
 typedef struct	s_discriminant
 {
 	double		a;
@@ -60,13 +61,12 @@ typedef struct	s_discriminant
 	double		c;
 	double		discriminant;
 }				t_discriminant;
+
 typedef struct	s_intersec
 {
 	int			count;
 	double		t[2];
 }				t_intersec;
-
-
 
 typedef struct	s_rt
 {
@@ -162,6 +162,7 @@ typedef struct s_intersection
 
 
 	// DADOS DO CONTATO/INTERSECÇÃO
+	t_discriminant 			discriminant;
 	t_intersec				intersect;
 	double					time;
 	int						hitcontact;

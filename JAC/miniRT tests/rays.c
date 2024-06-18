@@ -29,16 +29,9 @@ t_tuple		position(t_ray ray, double t) // position of the ray at time t
 	return(position);
 }
 
-t_sphere	create_sphere() // create a sphere at the origin
-{
-	t_sphere	sphere;
-	static int	id = 0;
 
-	sphere.center = create_point(0, 0, 0);
-	sphere.radius = 1.0;
-	sphere.id = id++;
-	return(sphere);
-}
+
+
 
 t_tuple sphere_to_ray(t_ray ray, t_sphere sphere)
 {
@@ -99,7 +92,9 @@ t_intersection* create_intersection(t_obj_type type, int idx) {
         return NULL;
     }
 
+    // Define o id da intersecção
 	intersection->id = idx;
+
     // Define o tipo de objeto
     intersection->objtype = type;
 
@@ -381,4 +376,48 @@ int add_last_intersection_object(t_intersections *intersections, t_obj_type type
         intersections->end = node;
     }
 	return(TRUE);
+}
+
+
+
+t_sphere *create_t_sphere (t_sphere *obj){
+	t_sphere	*sphere;
+	
+	sphere = (t_sphere*)malloc(sizeof(t_sphere));
+	if(!sphere)
+		return(NULL);
+
+	sphere->center.x = obj->center.x;
+	sphere->center.y = obj->center.y;
+	sphere->center.z = obj->center.z;
+	sphere->center.w = obj->center.w;
+	sphere->radius = obj->radius;
+	sphere->id = obj->id;
+	return(sphere);
+}
+
+t_intersection *create_insersect_parcial(t_ray ray, t_obj_type type, void *obj){
+	t_intersection *insersect;
+
+	t_intersection *insersect = (t_intersection*)malloc(sizeof(t_intersection));
+	if(!insersect)
+		return(NULL);
+
+	insersect->objtype = type;
+
+	if(type == CUBE){
+		insersect->obj = create_t_cube();
+	}else if(type == PYRAMID){
+		insersect->obj = create_t_pyramid();
+	}else if(type == PLANE){
+		insersect->obj = create_t_plane();
+	}else if(type == SPHERE){
+		insersect->obj = create_t_sphere(obj);
+	}else{
+		printf("\nTipo de objeto inválido em init_intersection\n");
+		free(insersect);
+		return NULL;
+	}
+
+	return(insersect);
 }
