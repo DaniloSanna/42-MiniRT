@@ -40,7 +40,7 @@ int	main(void){
     t_tuple matriz_transformacao = create_point(2, 2, 2);
 	double extra_values_rotation[] = {3.14/4}; // Valores para rotação
 	t_ray *scaled_ray;
-	scaled_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
+	scaled_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
 	
 	printf("\n\n_________________________TRANSFORMAÇÕES + INTERSECÇÔES_________________________\n\n");
 	
@@ -56,15 +56,17 @@ int	main(void){
 
  	t_intersections *intersections;
  	intersections = get_list_intersections(0);
+	t_sphere	sphere = create_sphere(0.0, 0.0 ,0.0, 0.0, 1.0);
+
 
  	if(!intersections){exit(-2);}
-	// if(add_last_intersections(intersections, SPHERE, 1) == FALSE) exit(-2);
-	if(add_last_intersection_object(intersections, SPHERE, scaled_ray, 1) == FALSE) exit(-2);
 
+	if(add_last_intersections(intersections, SPHERE, 0, NULL) == FALSE)
+ 		exit(-2);
 	t_intersection	*iter_one = get_last_intersec();
  	t_sphere		*sphere_one = get_last_intersected_obj();
+
 	calc_intersection(ray_GENERAL, iter_one, 0.0);
-	
 	printf("\nLOOP");
 
 	t_intersection	*loop = intersections->start;
@@ -101,12 +103,12 @@ int	main(void){
 	// t_ray *rotated_z_ray;
 	// t_ray *sheared_ray;
 
-	// translated_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, TRANSLATION);
-	// scaled_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
-	// rotated_x_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_X);
-	// rotated_y_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Y);
-	// rotated_z_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Z);
-	// sheared_ray = transform_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_entortar, SHEARING);
+	// translated_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, TRANSLATION);
+	// scaled_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, SCALING);
+	// rotated_x_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_X);
+	// rotated_y_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Y);
+	// rotated_z_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_values_rotation, ROTATATE_Z);
+	// sheared_ray = transform_ray_do_matrix_in(&ray_GENERAL, matriz_transformacao, extra_entortar, SHEARING);
 
 
 	// printf("\n\n_________________________TRANSFORMAÇÕES_________________________\n\n");
@@ -168,30 +170,30 @@ int	main(void){
  	// 	exit(-2);
 	// }
 
-	// if(add_last_intersections(intersections, SPHERE) == FALSE)
+	// if(add_last_intersections(intersections, SPHERE, 0, NULL) == FALSE)
  	// 	exit(-2);
 
  	// t_intersection	*iter_one = get_last_intersec();
  	// t_sphere		*sphere_one = get_last_intersected_obj();
 
-	// if(!add_last_intersections(intersections, SPHERE))
+	// if(!add_last_intersections(intersections, SPHERE, 0, NULL))
 	// 	exit(-2);
 
  	// t_intersection	*iter_two = get_last_intersec();
  	// t_sphere		*sphere_two = get_last_intersected_obj();
 
-	// if(!add_last_intersections(intersections, SPHERE))
+	// if(!add_last_intersections(intersections, SPHERE, 0, NULL))
 	// 	exit(-2);
 
  	// t_intersection	*iter_tree = get_last_intersec();
  	// t_sphere		*sphere_tree = get_last_intersected_obj();
-	// if(!add_last_intersections(intersections, SPHERE))
+	// if(!add_last_intersections(intersections, SPHERE, 0, NULL))
 	// 	exit(-2);
 
  	// t_intersection	*iter_four = get_last_intersec();
  	// t_sphere		*sphere_four = get_last_intersected_obj();
 
-	// if(!add_last_intersections(intersections, SPHERE))
+	// if(!add_last_intersections(intersections, SPHERE, 0, NULL))
 	// 	exit(-2);
 
  	// t_intersection	*iter_five = get_last_intersec();

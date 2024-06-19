@@ -181,6 +181,7 @@ typedef struct s_intersections
 } t_intersections;
 
 
+t_sphere create_sphere(double x, double y, double z, double w, double radius);
 void *create_t_plane();
 void *create_t_cylinder();
 void *create_t_cube(); 
@@ -190,7 +191,8 @@ void *create_t_sphere();
 t_intersection* create_intersection(t_obj_type type, int idx);
 t_intersections* create_intersections();
 t_intersections* get_list_intersections(int action);
-int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
+// int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
+add_last_intersections(t_intersections *intersections, t_obj_type type, int id, void *obj);
 t_intersection *get_last_intersec();
 void *get_last_intersected_obj();
 
@@ -210,8 +212,12 @@ typedef enum {
 	INVERSE
 } e_actiontransform;
 
-t_ray *transform_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
-t_ray *transform_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action);
+t_ray *transform_ray_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_ray_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action);
+
+t_ray *transform_obj_do_matrix_in(void *obj, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_obj_do_matrix_out(void *obj, t_matrix matrix, e_actiontransform action);
+
 t_tuple transform_formula_danilo(t_tuple t, t_matrix m);
 t_tuple create_blanktuple();
 t_ray *create_ray_pointer(t_tuple origin, t_tuple direction);

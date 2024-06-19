@@ -74,6 +74,17 @@ void *create_t_cylinder(){}
 void *create_t_cube(){} 
 void *create_t_pyramid(){}
 
+t_sphere create_sphere(double x, double y, double z, double w, double radius) {
+    t_sphere sphere;
+
+    sphere.center.x = x;
+    sphere.center.y = y;
+    sphere.center.z = z;
+    sphere.center.w = w;
+    sphere.radius = radius;
+    return(sphere);
+}
+
 void* create_t_sphere() {
     t_sphere* sphere = (t_sphere*)malloc(sizeof(t_sphere));
     if (sphere == NULL) {
@@ -167,10 +178,13 @@ t_intersections* get_list_intersections(int action) {
     return(NULL);
 }
 
-int add_last_intersections(t_intersections *intersections, t_obj_type type, int id){
+int add_last_intersections(t_intersections *intersections, t_obj_type type, int id, void *obj){
 	t_intersection *node;
 
-	node = create_intersection(type, id);
+	if(!obj)
+		node = create_intersection(type, id);
+	else
+		node->obj = obj;
 
 	if(!node){
 		printf("\n FALSE - add_last_intersections\n");
@@ -279,7 +293,7 @@ t_intersection *did_hit(t_intersections *intersections){
 
 
 // Função que recebe dois arrays e uma função como argumentos
-t_ray *transform_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
+t_ray *transform_ray_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
 
 	t_ray *transformation;
 	t_matrix matrix;
@@ -310,7 +324,7 @@ t_ray *transform_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalue
 	return(transformation);
 }
 
-t_ray *transform_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action) {
+t_ray *transform_ray_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action) {
 
 	t_ray *transformation;
 	transformation = create_ray_pointer(create_blanktuple(), create_blanktuple());
@@ -396,28 +410,3 @@ t_sphere *create_t_sphere (t_sphere *obj){
 	return(sphere);
 }
 
-t_intersection *create_insersect_parcial(t_ray ray, t_obj_type type, void *obj){
-	t_intersection *insersect;
-
-	t_intersection *insersect = (t_intersection*)malloc(sizeof(t_intersection));
-	if(!insersect)
-		return(NULL);
-
-	insersect->objtype = type;
-
-	if(type == CUBE){
-		insersect->obj = create_t_cube();
-	}else if(type == PYRAMID){
-		insersect->obj = create_t_pyramid();
-	}else if(type == PLANE){
-		insersect->obj = create_t_plane();
-	}else if(type == SPHERE){
-		insersect->obj = create_t_sphere(obj);
-	}else{
-		printf("\nTipo de objeto inválido em init_intersection\n");
-		free(insersect);
-		return NULL;
-	}
-
-	return(insersect);
-}
