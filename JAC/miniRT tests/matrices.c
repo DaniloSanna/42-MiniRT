@@ -314,9 +314,6 @@ t_matrix	calc_inverse_matrix(t_matrix m)
 
 
 // M_PI is a constant defined in math.h that represents the value of pi. It is used in various mathematical calculations involving circles, trigonometry, and other geometric shapes. For example, it can be used to calculate the circumference of a circle or the area of a circle. It is a useful constant in many mathematical and scientific applications.
-
-
-
 t_matrix	create_translation_matrix(double x, double y, double z)
 {
 	t_matrix	translation;

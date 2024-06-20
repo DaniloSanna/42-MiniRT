@@ -29,16 +29,9 @@ t_tuple		position(t_ray ray, double t) // position of the ray at time t
 	return(position);
 }
 
-t_sphere	create_sphere() // create a sphere at the origin
-{
-	t_sphere	sphere;
-	static int	id = 0;
 
-	sphere.center = create_point(0, 0, 0);
-	sphere.radius = 1.0;
-	sphere.id = id++;
-	return(sphere);
-}
+
+
 
 t_tuple sphere_to_ray(t_ray ray, t_sphere sphere)
 {
@@ -81,6 +74,17 @@ void *create_t_cylinder(){}
 void *create_t_cube(){} 
 void *create_t_pyramid(){}
 
+t_sphere create_sphere(double x, double y, double z, double w, double radius) {
+    t_sphere sphere;
+
+    sphere.center.x = x;
+    sphere.center.y = y;
+    sphere.center.z = z;
+    sphere.center.w = w;
+    sphere.radius = radius;
+    return(sphere);
+}
+
 void* create_t_sphere() {
     t_sphere* sphere = (t_sphere*)malloc(sizeof(t_sphere));
     if (sphere == NULL) {
@@ -99,7 +103,13 @@ t_intersection* create_intersection(t_obj_type type, int idx) {
         return NULL;
     }
 
+<<<<<<< HEAD
 	intersection->id = idx;
+=======
+    // Define o id da intersecção
+	intersection->id = idx;
+
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
     // Define o tipo de objeto
     intersection->objtype = type;
 
@@ -172,11 +182,21 @@ t_intersections* get_list_intersections(int action) {
     return(NULL);
 }
 
+<<<<<<< HEAD
 int add_last_intersections(t_intersections *intersections, t_obj_type type, int id){
 	t_intersection *node;
 
 	node = create_intersection(type, id);
 
+=======
+int add_last_intersections(t_intersections *intersections, t_obj_type type, int id, void *obj){
+	t_intersection *node;
+
+	if(!obj)
+		node = create_intersection(type, id);
+	else
+		node->obj = obj;
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
 
 	if(!node){
 		printf("\n FALSE - add_last_intersections\n");
@@ -243,11 +263,19 @@ void calc_intersection(t_ray ray, t_intersection *intersection_element, double t
 t_intersection *did_hit(t_intersections *intersections){
     t_intersection *loop = intersections->start;
     t_intersection *hitted_obj = NULL;
+<<<<<<< HEAD
     double hitted_t = DBL_MAX;  // Inicializado para o máximo valor de double
 
     while(loop) {
         if(loop->hitcontact != NO_HIT) {
             double min_t = DBL_MAX;
+=======
+    double hitted_t = 50000000000000000000000000000000000000000.00;  // Inicializado para o máximo valor de double
+
+    while(loop) {
+        if(loop->hitcontact != NO_HIT) {
+            double min_t = 50000000000000000000000000000000000000000.00;
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
             if (loop->hitcontact == ONE_HIT) {
                 min_t = loop->intersect.t[0];  // Apenas um hit válido
             } else if (loop->hitcontact == TWO_HIT) {
@@ -266,20 +294,154 @@ t_intersection *did_hit(t_intersections *intersections){
 
 
 // Função que recebe dois arrays e uma função como argumentos
+<<<<<<< HEAD
 t_ray *transform(t_ray ray, t_matrix matrix, char *action) {
+=======
+// t_ray *transform(t_ray *ray, t_matrix matrix, char *action) {
+
+// 	t_ray *transformation;
+
+// 	transformation = (t_ray*)malloc(sizeof(t_ray));
+// 	if(!transformation)
+// 		return(NULL);
+	
+// 	// Translação
+// 	if(ft_strcmp(action, "translate")){
+// 		transformation->origin = multiply_matrix_by_tuple(matrix, transformation->origin);
+// 		transformation->direction = multiply_matrix_by_tuple(matrix, transformation->direction);
+// 	}
+
+// 	return(transformation);
+// }
+
+
+// Função que recebe dois arrays e uma função como argumentos
+t_ray *transform_ray_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action) {
 
 	t_ray *transformation;
+	t_matrix matrix;
 
-	transformation = (t_ray*)malloc(sizeof(t_ray));
+	matrix = create_matrix_identity(4);
+	transformation = create_ray_pointer(create_blanktuple(), create_blanktuple());
 	if(!transformation)
 		return(NULL);
+
+	if(action == TRANSLATION){
+		matrix = create_translation_matrix(matrizdata.x, matrizdata.y, matrizdata.z);
+	}else if(action == SCALING){
+		matrix = create_scaling_matrix(matrizdata.x, matrizdata.y, matrizdata.z);
+		transformation->direction = transform_formula_danilo(ray->direction, matrix);
+	}else if(action == ROTATATE_X){
+		matrix = create_rotation_matrix_x(extravalues[0]);
+	}else if(action == ROTATATE_Y){
+		matrix = create_rotation_matrix_y(extravalues[0]);
+	}else if(action == ROTATATE_Z){
+		matrix = create_rotation_matrix_z(extravalues[0]);
+	}else if(action == SHEARING){
+		matrix = create_shearing_matrix(extravalues);
+	}else{
+		return(free(transformation), NULL);
+	}
+
+	transformation->origin = transform_formula_danilo(ray->origin, matrix);
+	return(transformation);
+}
+
+t_ray *transform_ray_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action) {
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
+
+	t_ray *transformation;
+	transformation = create_ray_pointer(create_blanktuple(), create_blanktuple());
+
+	if(!transformation)
+		return(NULL);
+	if(action == SCALING)
+		transformation->direction = transform_formula_danilo(ray->direction, matrix);
+	transformation->origin = transform_formula_danilo(ray->origin, matrix);
+	return(transformation);
+}
+
+t_tuple transform_formula_danilo(t_tuple t, t_matrix m) {
+    t_tuple result;
+	result.x = t.x * m.grid[0][0] + t.y * m.grid[0][1] + t.z * m.grid[0][2] + m.grid[0][3];
+    result.y = t.x * m.grid[1][0] + t.y * m.grid[1][1] + t.z * m.grid[1][2] + m.grid[1][3];
+    result.z = t.x * m.grid[2][0] + t.y * m.grid[2][1] + t.z * m.grid[2][2] + m.grid[2][3];
+	result.w = t.w;
+    return result;
+}
+
+
+t_tuple create_blanktuple(){
 	
+<<<<<<< HEAD
 	// Translação
 	if(strcmp(action, "translate")){
 		transformation->origin = multiply_matrix_by_tuple(matrix, transformation->origin);
 		transformation->direction = multiply_matrix_by_tuple(matrix, transformation->direction);
-	}
+=======
+	t_tuple retur;
 
+	retur.x = 0;
+	retur.y = 0;
+	retur.z = 0;
+	retur.w = 0;
+
+	return(retur);
+}
+
+t_ray *create_ray_pointer(t_tuple origin, t_tuple direction) // create a ray
+{
+	t_ray	*ray;
+
+	ray = (t_ray*)malloc(sizeof(t_ray));
+    if (!ray)
+		return(NULL);
+	ray->origin = create_point(origin.x, origin.y, origin.z);
+	ray->direction = create_vector(direction.x, direction.y, direction.z);
+	return(ray);
+}
+
+
+int add_last_intersection_object(t_intersections *intersections, t_obj_type type, void *obj, int id){
+	t_intersection *node;
+
+	node = create_intersection(type, id);
+
+	if(!node){
+		printf("\n FALSE - add_last_intersections\n");
+		return(FALSE);
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
+	}
+	if (intersections->start == NULL) {
+        intersections->start = node;
+        intersections->end = node;
+    } else {
+        intersections->end->next = node;
+        node->before = intersections->end;
+        intersections->end = node;
+    }
+	return(TRUE);
+}
+
+
+<<<<<<< HEAD
 	return(transformation);
+=======
+
+t_sphere *create_t_sphere (t_sphere *obj){
+	t_sphere	*sphere;
+	
+	sphere = (t_sphere*)malloc(sizeof(t_sphere));
+	if(!sphere)
+		return(NULL);
+
+	sphere->center.x = obj->center.x;
+	sphere->center.y = obj->center.y;
+	sphere->center.z = obj->center.z;
+	sphere->center.w = obj->center.w;
+	sphere->radius = obj->radius;
+	sphere->id = obj->id;
+	return(sphere);
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
 }
 

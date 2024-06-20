@@ -53,6 +53,7 @@ typedef struct	s_sphere
 	double		radius;
 	int			id;
 }				t_sphere;
+
 typedef struct	s_discriminant
 {
 	double		a;
@@ -60,13 +61,12 @@ typedef struct	s_discriminant
 	double		c;
 	double		discriminant;
 }				t_discriminant;
+
 typedef struct	s_intersec
 {
 	int			count;
 	double		t[2];
 }				t_intersec;
-
-
 
 typedef struct	s_rt
 {
@@ -143,6 +143,7 @@ typedef enum {
     TWO_HIT
 } t_did_hit;
 
+
 // Define a enumeração para identificar o tipo de objeto
 typedef enum {
     SPHERE,
@@ -154,12 +155,17 @@ typedef enum {
 typedef struct s_intersection
 {
 	int						id;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
 	// DADOS DO OBJETO
 	t_obj_type 				objtype;
 	void					*obj;
 
 
 	// DADOS DO CONTATO/INTERSECÇÃO
+	t_discriminant 			discriminant;
 	t_intersec				intersect;
 	double					time;
 	int						hitcontact;
@@ -178,16 +184,25 @@ typedef struct s_intersections
 } t_intersections;
 
 
+t_sphere create_sphere(double x, double y, double z, double w, double radius);
 void *create_t_plane();
 void *create_t_cylinder();
 void *create_t_cube(); 
 void *create_t_pyramid();
 void *create_t_sphere();
 
+<<<<<<< HEAD
 t_intersection* create_intersection(t_obj_type type, int id);
 t_intersections* create_intersections();
 t_intersections* get_list_intersections(int action);
 int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
+=======
+t_intersection* create_intersection(t_obj_type type, int idx);
+t_intersections* create_intersections();
+t_intersections* get_list_intersections(int action);
+// int add_last_intersections(t_intersections *intersections, t_obj_type type, int id);
+add_last_intersections(t_intersections *intersections, t_obj_type type, int id, void *obj);
+>>>>>>> 482636b038862f6c2e70dc0ef646aa3998a8f747
 t_intersection *get_last_intersec();
 void *get_last_intersected_obj();
 
@@ -196,8 +211,26 @@ void calc_intersection(t_ray ray, t_intersection *intersection_element, double t
 t_intersection *did_hit(t_intersections *intersections);
 
 
-typedef int (*transform_operations)(double, double);
-t_ray *transform(t_ray ray, t_matrix matrix, char *action);
+// Define ação de transformação
+typedef enum {
+	TRANSLATION,
+	SCALING,
+	ROTATATE_X,
+	ROTATATE_Y,
+	ROTATATE_Z,
+	SHEARING,
+	INVERSE
+} e_actiontransform;
+
+t_ray *transform_ray_do_matrix_in(t_ray *ray, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_ray_do_matrix_out(t_ray *ray, t_matrix matrix, e_actiontransform action);
+
+t_ray *transform_obj_do_matrix_in(void *obj, t_tuple matrizdata, double *extravalues, e_actiontransform action);
+t_ray *transform_obj_do_matrix_out(void *obj, t_matrix matrix, e_actiontransform action);
+
+t_tuple transform_formula_danilo(t_tuple t, t_matrix m);
+t_tuple create_blanktuple();
+t_ray *create_ray_pointer(t_tuple origin, t_tuple direction);
 
 
 // DELETAR
